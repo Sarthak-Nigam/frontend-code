@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 // Replace this URL with your actual deployed backend URL
-const API_URL = 'https://website-sarthaks-projects-5ddeb5c1.vercel.app/bhfl';
+const API_URL = 'https://website-sarthaks-projects-5ddeb5c1.vercel.app/bfhl';
 
 export default function Home() {
   const [input, setInput] = useState('');
