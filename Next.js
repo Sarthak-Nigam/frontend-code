@@ -1,10 +1,11 @@
+'use client'
+
 import React, { useState } from 'react';
-import { Select, Input, Button, Alert, Card } from '@/components/ui/';
-import { CheckCircle2, XCircle } from 'lucide-react';
 
-const API_URL = 'https://website-sarthaks-projects-5ddeb5c1.vercel.app/'; // Replace with your actual backend URL
+// Replace this URL with your actual deployed backend URL
+const API_URL = 'https://website-sarthaks-projects-5ddeb5c1.vercel.app/bhfl';
 
-const App = () => {
+export default function Home() {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState(null);
   const [error, setError] = useState('');
@@ -22,10 +23,13 @@ const App = () => {
         },
         body: JSON.stringify(parsedInput),
       });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       const data = await res.json();
       setResponse(data);
     } catch (err) {
-      setError('Invalid JSON input or API error');
+      setError(`Error: ${err.message}`);
     }
   };
 
@@ -33,7 +37,7 @@ const App = () => {
     if (!response) return null;
 
     return (
-      <Card className="mt-4 p-4">
+      <div className="mt-4 p-4 border rounded">
         <h2 className="text-xl font-bold mb-2">Response:</h2>
         {selectedOptions.includes('Alphabets') && (
           <p>Alphabets: {response.alphabets.join(', ')}</p>
@@ -44,49 +48,47 @@ const App = () => {
         {selectedOptions.includes('Highest lowercase alphabet') && (
           <p>Highest lowercase alphabet: {response.highest_lowercase_alphabet.join(', ')}</p>
         )}
-      </Card>
+      </div>
     );
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Bajaj Finserv Health Dev Challenge</h1>
-      <Input
-        className="mb-4"
+      <input
+        className="w-full p-2 mb-4 border rounded"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder='Enter JSON (e.g., { "data": ["A","C","z"] })'
       />
-      <Button onClick={handleSubmit} className="mb-4">Submit</Button>
+      <button onClick={handleSubmit} className="mb-4 px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
       
-      {error && <Alert variant="destructive" className="mb-4">{error}</Alert>}
+      {error && <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">{error}</div>}
       
       {response && (
-        <Select
-          className="mb-4"
-          placeholder="Select options to display"
-          isMulti
-          options={[
-            { value: 'Alphabets', label: 'Alphabets' },
-            { value: 'Numbers', label: 'Numbers' },
-            { value: 'Highest lowercase alphabet', label: 'Highest lowercase alphabet' },
-          ]}
-          onChange={(selectedOptions) => setSelectedOptions(selectedOptions.map(option => option.value))}
-        />
+        <select
+          className="mb-4 p-2 border rounded"
+          multiple
+          onChange={(e) => setSelectedOptions(Array.from(e.target.selectedOptions, option => option.value))}
+        >
+          <option value="Alphabets">Alphabets</option>
+          <option value="Numbers">Numbers</option>
+          <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
+        </select>
       )}
       
       {renderResponse()}
       
       {response && (
-        <Card className="mt-4 p-4">
+        <div className="mt-4 p-4 border rounded">
           <h2 className="text-xl font-bold mb-2">Additional Info:</h2>
           <p>User ID: {response.user_id}</p>
           <p>Email: {response.email}</p>
           <p>Roll Number: {response.roll_number}</p>
-          <p>Is Success: {response.is_success ? <CheckCircle2 className="inline text-green-500" /> : <XCircle className="inline text-red-500" />}</p>
+          <p>Is Success: {response.is_success ? "✅" : "❌"}</p>
           {response.file_valid !== undefined && (
             <>
-              <p>File Valid: {response.file_valid ? <CheckCircle2 className="inline text-green-500" /> : <XCircle className="inline text-red-500" />}</p>
+              <p>File Valid: {response.file_valid ? "✅" : "❌"}</p>
               {response.file_valid && (
                 <>
                   <p>File MIME Type: {response.file_mime_type}</p>
@@ -95,10 +97,8 @@ const App = () => {
               )}
             </>
           )}
-        </Card>
+        </div>
       )}
     </div>
   );
-};
-
-export default App;
+}
