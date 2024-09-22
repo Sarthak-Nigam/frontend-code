@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Select, Input, Button, Alert, Card } from '@/components/ui/';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
-const API_URL = 'https://website-sarthaks-projects-5ddeb5c1.vercel.app/bfhl'; // Replace with your actual backend URL
+const API_URL = 'https://website-sarthaks-projects-5ddeb5c1.vercel.app/'; // Replace with your actual backend URL
 
 const App = () => {
   const [input, setInput] = useState('');
